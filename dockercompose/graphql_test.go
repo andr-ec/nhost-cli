@@ -80,11 +80,11 @@ func expectedGraphql() *Service {
 			"traefik.http.routers.graphql.middlewares":                              "replace-graphql",
 			"traefik.http.routers.graphql.rule":                                     "PathPrefix(`/v1`) && Host(`local.graphql.nhost.run`)",
 			"traefik.http.routers.graphql.service":                                  "graphql",
-			"traefik.http.routers.graphql.tls":                                      "false",
+			"traefik.http.routers.graphql.tls":                                      "true",
 			"traefik.http.routers.hasura.entrypoints":                               "web",
 			"traefik.http.routers.hasura.rule":                                      "( PathPrefix(`/v1`) || PathPrefix(`/v2`) || PathPrefix(`/console/assets`) ) && Host(`local.hasura.nhost.run`)",
 			"traefik.http.routers.hasura.service":                                   "hasura",
-			"traefik.http.routers.hasura.tls":                                       "false",
+			"traefik.http.routers.hasura.tls":                                       "true",
 			"traefik.http.services.graphql.loadbalancer.server.port":                "8080",
 			"traefik.http.services.hasura.loadbalancer.server.port":                 "8080",
 		},
@@ -107,6 +107,7 @@ func TestGraphql(t *testing.T) {
 		{
 			name:     "success",
 			cfg:      getConfig,
+			useTlS:   true,
 			expected: expectedGraphql,
 		},
 	}
@@ -117,7 +118,7 @@ func TestGraphql(t *testing.T) {
 			t.Parallel()
 			tc := tc
 
-			got, err := graphql(tc.cfg(), tc.useTlS, 0)
+			got, err := graphql(tc.cfg(), 443, tc.useTlS, 0)
 			if err != nil {
 				t.Errorf("got error: %v", err)
 			}
