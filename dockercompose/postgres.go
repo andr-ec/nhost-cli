@@ -56,10 +56,12 @@ func postgres( //nolint:funlen
 		ExtraHosts:  extraHosts(),
 		HealthCheck: &HealthCheck{
 			Test: []string{
-				"CMD-SHELL", "pg_isready -U postgres", "-d", "postgres", "-q",
+				// "CMD-SHELL", "pg_isready -U postgres", "-d", "postgres", "-q", "-h", "postgres", "-c select 1",
+				"CMD-SHELL", `until timeout 3 psql -h postgres -U postgres -c "select 1" -d postgres > /dev/null
+				do printf "Waiting %s seconds for PostgreSQL to come up: %s@%s/%s...\n" 5 postgres postgres postgres; sleep 10; done`,
 			},
 			Timeout:     "60s",
-			Interval:    "5s",
+			Interval:    "10s",
 			StartPeriod: "60s",
 		},
 		Labels: nil,

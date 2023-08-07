@@ -54,7 +54,7 @@ func auth( //nolint:funlen
 		HealthCheck: &HealthCheck{
 			Test:        []string{"CMD", "wget", "--spider", "-S", "http://localhost:4000/healthz"},
 			Timeout:     "60s",
-			Interval:    "5s",
+			Interval:    "10s",
 			StartPeriod: "60s",
 		},
 		Labels: Ingresses{
