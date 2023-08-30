@@ -137,7 +137,7 @@
         };
 
         packages = flake-utils.lib.flattenTree rec {
-          cli = pkgs.buildGoModule {
+          nhost = pkgs.buildGoModule {
             inherit src version ldflags buildInputs nativeBuildInputs;
 
             pname = name;
@@ -147,6 +147,11 @@
             doCheck = false;
 
             CGO_ENABLED = 1;
+
+            installPhase = ''
+              mkdir -p $out/bin
+              cp $src/bin/cli $out/bin/nhost
+            '';
 
             meta = with pkgs.lib; {
               description = description;
